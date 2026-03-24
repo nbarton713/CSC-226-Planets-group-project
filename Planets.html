@@ -22,12 +22,94 @@
 <section id="facts">...</section>
 
 
+
+
+
     <!-- Text content -->
 
 
     <h1>Planet Seeker (WIP)</h1>
     <p>Welcome to Planet Seeker! <br>
-    Here you can view the phases of each planet of the solar system as viewed from Earth!</p>
+    Here you can view the phases of each planet of the solar system as viewed from Earth! <br>
+    <br>
+    <br>
+    <p>A phase angle is the angle between the Sun, the observed object, and the observer (e.g., Earth).<br>
+         It determines how much of the object's surface is illuminated and visible from the observer's perspective.<br>
+         <br>
+            An interactive example of how phase angles work:</p>
+    <br>
+</p>
+
+
+
+
+
+
+    <!-- Phase angle concept prototype -->
+
+<!-- PHASE DEMO — drop anywhere in <body> -->
+<!-- Needs: one canvas, one slider, one readout -->
+
+<div style="display:flex;flex-direction:column;align-items:center;gap:1rem;width:100%;">  
+<div id="phase-presets" style="display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;align-items:flex-end"></div>
+<canvas id="phase-demo" width="160" height="160"></canvas>
+<input type="range" min="0" max="180" value="90" oninput="phDraw(+this.value)" style="width:220px;accent-color:#e8d5a3;cursor:pointer">
+<p id="phase-readout" style="font:bold 16px sans-serif;color:#e8d5a3"></p>
+</div>
+
+<script>
+// draws a phase on any canvas given an angle (0=full, 180=new)
+function phDraw(a, cv) {
+  cv = cv || document.getElementById('phase-demo');
+  const x=cv.getContext('2d'), c=cv.width/2, r=c-3;
+  const f=(s,fn)=>{x.beginPath();fn();x.fillStyle=s;x.fill()};
+  x.clearRect(0,0,cv.width,cv.height);
+  f('#0a0a1a', ()=>x.arc(c,c,r,0,Math.PI*2));                                          // dark base
+  f('#e8d5a3', ()=>{x.arc(c,c,r,Math.PI/2,-Math.PI/2,false);x.lineTo(c,c)});           // lit half
+  f(a<90?'#0a0a1a':'#e8d5a3', ()=>x.ellipse(c,c,Math.abs(Math.cos(a*Math.PI/180))*r,r,0,0,Math.PI*2)); // terminator
+  x.beginPath();x.arc(c,c,r,0,Math.PI*2);x.strokeStyle='rgba(255,255,255,.2)';x.lineWidth=1.5;x.stroke();
+  // only update readout when drawing the main demo (not presets)
+  if(cv===document.getElementById('phase-demo'))
+    document.getElementById('phase-readout').textContent=a+'° | '+Math.round((1-a/180)*100)+'% lit';
+}
+
+// build preset row
+[['Full',0],['Gibbous',30],['Quarter',60],['Half',90],['Quarter',120],['Crescent',150],['New',180]]
+  .forEach(([l,a])=>{
+    const d=document.createElement('div'),c=document.createElement('canvas'),s=document.createElement('span');
+    c.width=c.height=48; phDraw(a,c);
+    Object.assign(d.style,{display:'flex',flexDirection:'column',alignItems:'center',gap:'4px'});
+    Object.assign(s.style,{font:'11px sans-serif',color:'#fff'});
+    s.textContent=l; d.append(c,s);
+    document.getElementById('phase-presets').appendChild(d);
+  });
+
+phDraw(90); // initial draw — replace 90 with NASA angle when live
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </body>
 </html>
