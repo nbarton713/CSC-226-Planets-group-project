@@ -64,9 +64,20 @@ else             phaseName = 'New';
 phDraw(90);
 
 
+
+
 //Connects to NASA’s Horizon API, and then pulls needed values such as phase angle to then be passed onto the phDraw function
 //Async function makes the program wait until it gets the data from NASA before progressing
 async function fetchMercuryPhaseAngle() {
+
+
+  // Fetches current date/time, removes the time and passes only the date portion to API request
+  const now = new Date();
+  const startTime = now.toISOString().split('T')[0];
+  const stopTime = new Date(now);
+  stopTime.setDate(stopTime.getDate() + 1);
+  const stopTimeFormatted = stopTime.toISOString().split('T')[0];
+
 
   const params = new URLSearchParams({
     format: 'json',
@@ -74,9 +85,9 @@ async function fetchMercuryPhaseAngle() {
     CENTER: '500@399',
     MAKE_EPHEM: 'YES',
     EPHEM_TYPE: 'OBSERVER',
-    START_TIME: '2026-03-27',   //Temporily hardcoded times, needs to pull current time and put that within the parameters for the API call
-    STOP_TIME: '2026-03-28',  
-    STEP_SIZE: '1m',          // 1 minute step size for high resolution
+    START_TIME: startTime,   
+    STOP_TIME: stopTimeFormatted,  
+    STEP_SIZE: '1d',          // 1 day step size
     QUANTITIES: '24'          // Quantity 24 corresponds to the phase angle (S-T-O) in the Horizons API
   });
 
