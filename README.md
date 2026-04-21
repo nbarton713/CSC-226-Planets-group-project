@@ -1,3 +1,8 @@
+Fork to attempt to add images/add a glow effect. not currently working, will work on it. (4/21)
+
+---------------------------------------------------------------------------------------------------
+
+
 Fork to add about page (Nick Barton 3/31)
 
 
